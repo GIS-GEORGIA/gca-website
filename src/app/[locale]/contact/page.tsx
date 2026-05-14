@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { MapPin, Mail, Phone, Clock, Send } from "lucide-react";
+import LeafletMap from "@/components/ui/LeafletMap";
 
 const contactInfo = [
   {
@@ -63,18 +64,8 @@ export default function ContactPage() {
                 </div>
               ))}
 
-              {/* Google Maps embed */}
-              <div className="rounded-lg overflow-hidden border border-[#0a2342]/10 mt-4">
-                <iframe
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2978.3!2d44.7875!3d41.6934!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40440cd7a35c5a79%3A0x8ca4f2d0f2ef7e!2sI.%20Chavchavadze%20Ave%203%2C%20Tbilisi!5e0!3m2!1ska!2sge!4v1"
-                  width="100%"
-                  height="220"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
+              {/* Leaflet map */}
+              <LeafletMap />
             </div>
 
             {/* Form */}
