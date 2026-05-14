@@ -1,24 +1,21 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
-import { client, sanityConfigured } from "@/sanity/client";
-import { postBySlugQuery } from "@/sanity/queries";
-import { PortableText } from "next-sanity";
+import blogPostsData from "@/data/blogPosts.json";
 
-export const dynamic = "force-dynamic";
-
-type Post = {
-  _id: string;
+type BlogPost = {
+  id: string;
+  slug: string;
   title: string;
   titleEn?: string;
-  slug: { current: string };
   publishedAt: string;
   category?: string;
-  excerpt?: string;
-  body?: unknown[];
-  bodyEn?: unknown[];
-  imageUrl?: string;
+  body?: string;
+  bodyEn?: string;
+  thumbnailUrl: string | null;
 };
+
+const posts: BlogPost[] = blogPostsData as BlogPost[];
 
 export default async function BlogPostPage({
   params,
@@ -26,16 +23,14 @@ export default async function BlogPostPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  const post: Post | null = sanityConfigured
-    ? await client.fetch(postBySlugQuery, { slug: id }).catch(() => null)
-    : null;
+  const post = posts.find((p) => p.slug === id) ?? null;
 
   if (!post) {
     return (
       <div className="bg-[#f8f5ef] min-h-screen flex items-center justify-center">
         <div className="text-center">
           <p className="text-[#0a2342]/50 mb-4">სტატია ვერ მოიძებნა</p>
-          <Link href={`/${locale}/blog`} className="text-[#c8a951] hover:underline">← სიახლეებზე დაბრუნება</Link>
+          <Link href={`/${locale}/blog`} className="text-[#c8a951] hover:underline">← სტატიებზე დაბრუნება</Link>
         </div>
       </div>
     );
@@ -49,13 +44,13 @@ export default async function BlogPostPage({
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Link href={`/${locale}/blog`}
           className="inline-flex items-center gap-2 text-[#0a2342]/60 hover:text-[#0a2342] text-sm mb-8 transition-colors">
-          <ArrowLeft size={16} /> სიახლეებზე დაბრუნება
+          <ArrowLeft size={16} /> სტატიებზე დაბრუნება
         </Link>
 
         <article className="bg-white rounded-lg shadow-sm overflow-hidden">
-          {post.imageUrl && (
+          {post.thumbnailUrl && (
             <div className="relative h-72 w-full">
-              <Image src={post.imageUrl} alt={title} fill className="object-cover" />
+              <Image src={post.thumbnailUrl} alt={title} fill className="object-cover" />
             </div>
           )}
 
@@ -78,11 +73,8 @@ export default async function BlogPostPage({
             </h1>
 
             {body && (
-              <div className="prose prose-lg max-w-none text-[#0a2342]/80 leading-relaxed
-                [&_h2]:font-serif [&_h2]:text-[#0a2342] [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4
-                [&_p]:mb-4 [&_a]:text-[#c8a951] [&_a]:underline">
-                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
-                <PortableText value={body as any} />
+              <div className="prose prose-lg max-w-none text-[#0a2342]/80 leading-relaxed whitespace-pre-wrap">
+                {body}
               </div>
             )}
 

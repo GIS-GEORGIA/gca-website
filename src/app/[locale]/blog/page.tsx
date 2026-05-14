@@ -1,19 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
-import { client, sanityConfigured } from "@/sanity/client";
-import { postsQuery } from "@/sanity/queries";
+import blogPostsData from "@/data/blogPosts.json";
 
-type Post = {
-  _id: string;
+type BlogPost = {
+  id: string;
+  slug: string;
   title: string;
   titleEn?: string;
-  slug: { current: string };
   publishedAt: string;
   category?: string;
   excerpt?: string;
   excerptEn?: string;
-  imageUrl?: string;
+  thumbnailUrl: string | null;
 };
+
+const posts: BlogPost[] = blogPostsData as BlogPost[];
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleDateString("ka-GE", {
@@ -21,48 +22,34 @@ function formatDate(iso: string) {
   });
 }
 
-export const revalidate = 60; // განახლება ყოველ 60 წამში
-
 export default async function BlogPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const posts: Post[] = sanityConfigured
-    ? await client.fetch(postsQuery).catch(() => [])
-    : [];
-
-  // თუ Sanity ჯერ კონფიგურებული არ არის, placeholder-ები ჩანს
-  const fallback: Post[] = [
-    { _id: "1", title: "სტატია დაემატება Sanity Studio-დან", slug: { current: "placeholder" }, publishedAt: new Date().toISOString(), category: "სიახლეები", excerpt: "Sanity Studio-ს კონფიგურაციის შემდეგ სტატიები ამ გვერდზე ავტომატურად გამოჩნდება." },
-  ];
-
-  const items = posts.length > 0 ? posts : fallback;
 
   return (
     <div>
       <section className="bg-[#0a2342] text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-[#c8a951] text-sm font-semibold uppercase tracking-widest mb-3">ბლოგი</p>
-          <h1 className="text-4xl md:text-5xl font-bold font-serif">სიახლეები</h1>
+          <h1 className="text-4xl md:text-5xl font-bold font-serif">სტატიები</h1>
         </div>
       </section>
 
       <section className="py-16 bg-[#f8f5ef]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {items.map((post) => (
-              <article key={post._id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-[#0a2342]/5">
-                {/* სურათი */}
-                {post.imageUrl ? (
+            {posts.map((post) => (
+              <article key={post.id} className="bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-[#0a2342]/5">
+                {post.thumbnailUrl ? (
                   <div className="relative h-44 w-full">
-                    <Image src={post.imageUrl} alt={post.title} fill className="object-cover" />
+                    <Image src={post.thumbnailUrl} alt={post.title} fill className="object-cover" />
                   </div>
                 ) : (
                   <div className="h-2 bg-[#c8a951]" />
                 )}
-
                 <div className="p-6">
                   <div className="flex items-center gap-3 mb-4">
                     {post.category && (
@@ -76,7 +63,7 @@ export default async function BlogPage({
                   <p className="text-sm text-[#0a2342]/65 mb-5 leading-relaxed">
                     {locale === "en" && post.excerptEn ? post.excerptEn : post.excerpt}
                   </p>
-                  <Link href={`/${locale}/blog/${post.slug.current}`} className="text-sm text-[#c8a951] font-semibold hover:underline">
+                  <Link href={`/${locale}/blog/${post.slug}`} className="text-sm text-[#c8a951] font-semibold hover:underline">
                     სრულად წაიკითხე →
                   </Link>
                 </div>
