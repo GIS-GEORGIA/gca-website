@@ -1,0 +1,47 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "blog": "News",
+    "membership": "Membership",
+    "atlas": "Digital Atlas",
+    "contact": "Contact"
+  },
+  "hero": {
+    "title": "Georgian Cartographers Association",
+    "subtitle": "Advancing and promoting Georgian cartography",
+    "cta_primary": "Open Atlas",
+    "cta_secondary": "About Us"
+  },
+  "about": {
+    "title": "About the Association",
+    "mission": "Mission",
+    "mission_text": "The Georgian Cartographers Association unites Georgian cartographers, geographers and GIS specialists.",
+    "history": "History",
+    "team": "Team"
+  },
+  "blog": {
+    "title": "News",
+    "read_more": "Read more",
+    "all_posts": "All posts"
+  },
+  "membership": {
+    "title": "Membership",
+    "join": "Become a member",
+    "benefits": "Benefits"
+  },
+  "atlas": {
+    "title": "Digital Atlas",
+    "subtitle": "Interactive maps and geographical data"
+  },
+  "contact": {
+    "title": "Contact",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send"
+  },
+  "footer": {
+    "rights": "All rights reserved"
+  }
+}
