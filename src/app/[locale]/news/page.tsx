@@ -1,9 +1,8 @@
-import { client, sanityConfigured } from "@/sanity/client";
-import { socialPostsQuery } from "@/sanity/queries";
+import socialPostsData from "@/data/socialPosts.json";
 import { SocialPostCard } from "@/components/ui/SocialPostCard";
 
 type SocialPost = {
-  _id: string;
+  id: string;
   title: string;
   titleEn?: string;
   description?: string;
@@ -11,10 +10,10 @@ type SocialPost = {
   platform: "facebook" | "instagram" | "youtube";
   postUrl: string;
   publishedAt: string;
-  thumbnailUrl?: string;
+  thumbnailUrl: string | null;
 };
 
-export const revalidate = 60;
+const posts: SocialPost[] = socialPostsData as SocialPost[];
 
 export default async function NewsPage({
   params,
@@ -22,10 +21,6 @@ export default async function NewsPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-
-  const posts: SocialPost[] = sanityConfigured
-    ? await client.fetch(socialPostsQuery).catch(() => [])
-    : [];
 
   return (
     <div>
@@ -39,8 +34,7 @@ export default async function NewsPage({
             სიახლეები
           </h1>
           <p className="text-white/60 max-w-xl">
-            ასოციაციის სოციალური ქსელების პოსტები ერთ ადგილზე — Facebook,
-            Instagram და YouTube
+            ასოციაციის სოციალური ქსელების პოსტები ერთ ადგილზე
           </p>
         </div>
       </section>
@@ -55,14 +49,21 @@ export default async function NewsPage({
                 პოსტები ჯერ არ დამატებულა
               </p>
               <p className="text-[#0a2342]/35 text-sm">
-                Sanity Studio-ში დაამატე{" "}
-                <strong>სოც. მედია პოსტი</strong> და ავტომატურად გამოჩნდება
+                დაამატე ჩანაწერი{" "}
+                <code className="bg-[#0a2342]/10 px-1 rounded">
+                  src/data/socialPosts.json
+                </code>{" "}
+                ფაილში
               </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => (
-                <SocialPostCard key={post._id} post={post} locale={locale} />
+                <SocialPostCard
+                  key={post.id}
+                  post={{ ...post, _id: post.id, thumbnailUrl: post.thumbnailUrl ?? undefined }}
+                  locale={locale}
+                />
               ))}
             </div>
           )}
