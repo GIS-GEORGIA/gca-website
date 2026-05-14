@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { client } from "@/sanity/client";
+import { client, sanityConfigured } from "@/sanity/client";
 import { postsQuery } from "@/sanity/queries";
 
 type Post = {
@@ -29,7 +29,9 @@ export default async function BlogPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
-  const posts: Post[] = await client.fetch(postsQuery).catch(() => []);
+  const posts: Post[] = sanityConfigured
+    ? await client.fetch(postsQuery).catch(() => [])
+    : [];
 
   // თუ Sanity ჯერ კონფიგურებული არ არის, placeholder-ები ჩანს
   const fallback: Post[] = [

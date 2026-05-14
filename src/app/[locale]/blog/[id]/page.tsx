@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft, Calendar, Tag } from "lucide-react";
-import { client } from "@/sanity/client";
+import { client, sanityConfigured } from "@/sanity/client";
 import { postBySlugQuery } from "@/sanity/queries";
 import { PortableText } from "next-sanity";
 
@@ -24,7 +24,9 @@ export default async function BlogPostPage({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { locale, id } = await params;
-  const post: Post | null = await client.fetch(postBySlugQuery, { slug: id }).catch(() => null);
+  const post: Post | null = sanityConfigured
+    ? await client.fetch(postBySlugQuery, { slug: id }).catch(() => null)
+    : null;
 
   if (!post) {
     return (
