@@ -29,10 +29,36 @@ const contactInfo = [
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    setSent(true);
+    setLoading(true);
+    setError("");
+
+    const fd = new FormData(e.currentTarget);
+    const body = {
+      firstName: fd.get("firstName"),
+      lastName:  fd.get("lastName"),
+      email:     fd.get("email"),
+      subject:   fd.get("subject"),
+      message:   fd.get("message"),
+    };
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      if (!res.ok) throw new Error();
+      setSent(true);
+    } catch {
+      setError("გაგზავნა ვერ მოხერხდა. სცადე ხელახლა.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -86,33 +112,25 @@ export default function ContactPage() {
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    {[
-                      { label: "სახელი", placeholder: "შენი სახელი" },
-                      { label: "გვარი", placeholder: "შენი გვარი" },
-                    ].map(({ label, placeholder }) => (
-                      <div key={label}>
-                        <label className="block text-sm font-semibold text-[#0a2342] mb-1.5">{label}</label>
-                        <input
-                          type="text"
-                          placeholder={placeholder}
-                          className="w-full border border-[#0a2342]/20 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] transition-colors"
-                          required
-                        />
-                      </div>
-                    ))}
+                    <div>
+                      <label className="block text-sm font-semibold text-[#0a2342] mb-1.5">სახელი</label>
+                      <input name="firstName" type="text" placeholder="შენი სახელი" required
+                        className="w-full border border-[#0a2342]/20 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] transition-colors" />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-[#0a2342] mb-1.5">გვარი</label>
+                      <input name="lastName" type="text" placeholder="შენი გვარი"
+                        className="w-full border border-[#0a2342]/20 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] transition-colors" />
+                    </div>
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-[#0a2342] mb-1.5">ელ. ფოსტა</label>
-                    <input
-                      type="email"
-                      placeholder="your@email.com"
-                      className="w-full border border-[#0a2342]/20 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] transition-colors"
-                      required
-                    />
+                    <input name="email" type="email" placeholder="your@email.com" required
+                      className="w-full border border-[#0a2342]/20 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] transition-colors" />
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-[#0a2342] mb-1.5">თემა</label>
-                    <select className="w-full border border-[#0a2342]/20 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] bg-white">
+                    <select name="subject" className="w-full border border-[#0a2342]/20 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] bg-white">
                       <option>ზოგადი კითხვა</option>
                       <option>წევრობა</option>
                       <option>თანამშრომლობა</option>
@@ -122,18 +140,14 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-semibold text-[#0a2342] mb-1.5">შეტყობინება</label>
-                    <textarea
-                      rows={5}
-                      placeholder="დაწერე შენი შეტყობინება..."
-                      className="w-full border border-[#0a2342]/20 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] transition-colors resize-none"
-                      required
-                    />
+                    <textarea name="message" rows={5} placeholder="დაწერე შენი შეტყობინება..." required
+                      className="w-full border border-[#0a2342]/20 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-[#c8a951] transition-colors resize-none" />
                   </div>
-                  <button
-                    type="submit"
-                    className="w-full bg-[#0a2342] text-white py-3 rounded font-semibold hover:bg-[#0a2342]/80 transition-colors flex items-center justify-center gap-2"
+                  {error && <p className="text-red-600 text-sm">{error}</p>}
+                  <button type="submit" disabled={loading}
+                    className="w-full bg-[#0a2342] text-white py-3 rounded font-semibold hover:bg-[#0a2342]/80 transition-colors flex items-center justify-center gap-2 disabled:opacity-60"
                   >
-                    <Send size={16} /> გაგზავნა
+                    <Send size={16} /> {loading ? "იგზავნება..." : "გაგზავნა"}
                   </button>
                 </form>
               )}
