@@ -15,6 +15,21 @@ export const postsQuery = groq`
   }
 `;
 
+// სოციალური მედიის პოსტები
+export const socialPostsQuery = groq`
+  *[_type == "socialPost"] | order(publishedAt desc) {
+    _id,
+    title,
+    titleEn,
+    description,
+    descriptionEn,
+    platform,
+    postUrl,
+    publishedAt,
+    "thumbnailUrl": thumbnail.asset->url
+  }
+`;
+
 // ერთი სტატია slug-ით
 export const postBySlugQuery = groq`
   *[_type == "post" && slug.current == $slug][0] {

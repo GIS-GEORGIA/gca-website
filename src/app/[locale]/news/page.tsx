@@ -1,0 +1,73 @@
+import { client, sanityConfigured } from "@/sanity/client";
+import { socialPostsQuery } from "@/sanity/queries";
+import { SocialPostCard } from "@/components/ui/SocialPostCard";
+
+type SocialPost = {
+  _id: string;
+  title: string;
+  titleEn?: string;
+  description?: string;
+  descriptionEn?: string;
+  platform: "facebook" | "instagram" | "youtube";
+  postUrl: string;
+  publishedAt: string;
+  thumbnailUrl?: string;
+};
+
+export const revalidate = 60;
+
+export default async function NewsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+
+  const posts: SocialPost[] = sanityConfigured
+    ? await client.fetch(socialPostsQuery).catch(() => [])
+    : [];
+
+  return (
+    <div>
+      {/* Hero */}
+      <section className="bg-[#0a2342] text-white py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <p className="text-[#c8a951] text-sm font-semibold uppercase tracking-widest mb-3">
+            სოციალური მედია
+          </p>
+          <h1 className="text-4xl md:text-5xl font-bold font-serif mb-4">
+            სიახლეები
+          </h1>
+          <p className="text-white/60 max-w-xl">
+            ასოციაციის სოციალური ქსელების პოსტები ერთ ადგილზე — Facebook,
+            Instagram და YouTube
+          </p>
+        </div>
+      </section>
+
+      {/* Posts grid */}
+      <section className="py-16 bg-[#f8f5ef]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {posts.length === 0 ? (
+            <div className="text-center py-20">
+              <div className="text-6xl mb-4">📱</div>
+              <p className="text-[#0a2342]/50 text-lg mb-2">
+                პოსტები ჯერ არ დამატებულა
+              </p>
+              <p className="text-[#0a2342]/35 text-sm">
+                Sanity Studio-ში დაამატე{" "}
+                <strong>სოც. მედია პოსტი</strong> და ავტომატურად გამოჩნდება
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {posts.map((post) => (
+                <SocialPostCard key={post._id} post={post} locale={locale} />
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+    </div>
+  );
+}
