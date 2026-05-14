@@ -5,6 +5,8 @@ import { client, sanityConfigured } from "@/sanity/client";
 import { postBySlugQuery } from "@/sanity/queries";
 import { PortableText } from "next-sanity";
 
+export const dynamic = "force-dynamic";
+
 type Post = {
   _id: string;
   title: string;
@@ -79,7 +81,8 @@ export default async function BlogPostPage({
               <div className="prose prose-lg max-w-none text-[#0a2342]/80 leading-relaxed
                 [&_h2]:font-serif [&_h2]:text-[#0a2342] [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:mt-8 [&_h2]:mb-4
                 [&_p]:mb-4 [&_a]:text-[#c8a951] [&_a]:underline">
-                <PortableText value={body as Parameters<typeof PortableText>[0]["value"]} />
+                {/* eslint-disable-next-line @typescript-eslint/no-explicit-any */}
+                <PortableText value={body as any} />
               </div>
             )}
 
