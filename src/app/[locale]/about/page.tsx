@@ -1,53 +1,182 @@
-import { MapPin, Users, Award, Camera } from "lucide-react";
+"use client";
+
+import { MapPin, Users, Award, Camera, X } from "lucide-react";
 import Image from "next/image";
+import { useState, useMemo } from "react";
 
 const team = [
   {
-    name: "სახელი გვარი",
-    role: "პრეზიდენტი",
+    name: "თედო გორგოძე",
+    role: "სკა-ის გამგეობის წევრი",
     bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
     photo: null,
   },
   {
-    name: "სახელი გვარი",
-    role: "გენერალური მდივანი",
+    name: "ზურაბ ლაოშვილი",
+    role: "სკა-ის გამგეობის წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "გოჩა გუძუაძე",
+    role: "სკა-ის გამგეობის წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "საბა მოდებაძე",
+    role: "სკა-ის გამგეობის წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "მარიამ გაგოშაშვილი",
+    role: "სკა-ის გამგეობის წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "რევაზ თოლორდავა",
+    role: "სკა-ის გამგეობის წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "ხატია ყველაშვილი",
+    role: "სკა-ის გამგეობის წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "ილია ქავთარაძე",
+    role: "სკა-ის გამგეობის წევრი",
     bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
     photo: null,
   },
   {
     name: "ლიკა ცერცვაძე",
-    role: "გენერალური საბჭოს წევრი",
+    role: "სკა-ის გამგეობის წევრი",
     bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
     photo: null,
   },
   {
-    name: "სახელი გვარი",
-    role: "სამეცნიერო მდივანი",
+    name: "გიორგი ბერუჩაშვილი",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
     bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
     photo: null,
   },
   {
-    name: "სახელი გვარი",
-    role: "გამგეობის წევრი",
+    name: "ლალი გოგინავა",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
     bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
     photo: null,
   },
   {
-    name: "სახელი გვარი",
-    role: "გამგეობის წევრი",
+    name: "სოფიო გორგიჯანიძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "გიორგი დვალაშვილი",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "ნოდარ ელიზბარაშვილი",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "თეონა თიგიშვილი",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "გიორგი კაპანაძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "ნატო მაისურაძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "რობერტ მაღლაკელიძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "დემეტრე მოდებაძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "გიორგი მძელური",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "დავით სვანაძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "მანანა შარაშენიძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "ვანო ცარციძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "ნოდარ ხორბალაძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "თამარ ჭიჭინაძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "ნიკა ბერუჩაშვილი",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "ვლადიმერ ბუაჩიძე",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
+    bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
+    photo: null,
+  },
+  {
+    name: "გიორგი გაფრინდაშვილი",
+    role: "სკა-ის სამეცნიერო საბჭოს წევრი",
     bio: "მოკლე ბიოგრაფია — სპეციალობა, გამოცდილება, ორგანიზაცია.",
     photo: null,
   },
 ];
 
-const milestones = [
-  { year: "1994", text: "ასოციაციის დაარსება" },
-  { year: "1998", text: "ICA-ს (საერთაშორისო კარტოგრაფიული ასოციაცია) სრულუფლებიანი წევრი" },
-  { year: "2005", text: "პირველი ეროვნული ატლასის გამოცემა" },
-  { year: "2012", text: "ციფრული კარტოგრაფიის განყოფილების შექმნა" },
-  { year: "2018", text: "GIS ეროვნული სტანდარტების შემუშავება" },
-  { year: "2024", text: "ღია მონაცემების პლატფორმის გამოშვება" },
-];
+// უნიკალური როლები/სტატუსები
+const allRoles = Array.from(new Set(team.map((m) => m.role)));
 
 function TeamCard({ name, role, bio, photo }: (typeof team)[0]) {
   return (
@@ -74,6 +203,20 @@ function TeamCard({ name, role, bio, photo }: (typeof team)[0]) {
 }
 
 export default function AboutPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+
+  // ფილტრირებული ტიმი
+  const filteredTeam = useMemo(() => {
+    return team.filter((member) => {
+      const matchesName = member.name
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase());
+      const matchesRole = selectedRole === null || member.role === selectedRole;
+      return matchesName && matchesRole;
+    });
+  }, [searchQuery, selectedRole]);
+
   return (
     <div>
       {/* Hero */}
@@ -116,7 +259,14 @@ export default function AboutPage() {
             <h2 className="text-3xl font-bold text-[#0a2342] font-serif">ისტორია</h2>
           </div>
           <div className="relative border-l-2 border-[#c8a951]/40 pl-8 space-y-8 max-w-2xl">
-            {milestones.map(({ year, text }) => (
+            {[
+              { year: "1994", text: "ასოციაციის დაარსება" },
+              { year: "1998", text: "ICA-ს (საერთაშორისო კარტოგრაფიული ასოციაცია) სრულუფლებიანი წევრი" },
+              { year: "2005", text: "პირველი ეროვნული ატლასის გამოცემა" },
+              { year: "2012", text: "ციფრული კარტოგრაფიის განყოფილების შექმნა" },
+              { year: "2018", text: "GIS ეროვნული სტანდარტების შემუშავება" },
+              { year: "2024", text: "ღია მონაცემების პლატფორმის გამოშვება" },
+            ].map(({ year, text }) => (
               <div key={year} className="relative">
                 <div className="absolute -left-[2.6rem] w-5 h-5 rounded-full bg-[#c8a951] border-4 border-[#f8f5ef]" />
                 <span className="text-[#c8a951] font-bold text-sm">{year}</span>
@@ -134,11 +284,73 @@ export default function AboutPage() {
             <p className="text-[#c8a951] text-sm font-semibold uppercase tracking-widest mb-2">გუნდი</p>
             <h2 className="text-3xl font-bold text-[#0a2342] font-serif">გამგეობა</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {team.map((member, i) => (
-              <TeamCard key={i} {...member} />
-            ))}
+
+          {/* ფილტრაციის კონტროლები */}
+          <div className="mb-8 space-y-6">
+            {/* ძებნა */}
+            <div className="relative">
+              <input
+                type="text"
+                placeholder="ძებნა სახელ-გვარით..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-4 py-3 rounded-lg border border-[#0a2342]/20 focus:outline-none focus:ring-2 focus:ring-[#c8a951] text-[#0a2342] placeholder-[#0a2342]/40"
+              />
+              {searchQuery && (
+                <button
+                  onClick={() => setSearchQuery("")}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#0a2342]/40 hover:text-[#0a2342]"
+                >
+                  <X size={18} />
+                </button>
+              )}
+            </div>
+
+            {/* სტატუსის ფილტრი */}
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => setSelectedRole(null)}
+                className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                  selectedRole === null
+                    ? "bg-[#0a2342] text-white"
+                    : "bg-[#0a2342]/10 text-[#0a2342] hover:bg-[#0a2342]/20"
+                }`}
+              >
+                ყველა ({team.length})
+              </button>
+              {allRoles.map((role) => {
+                const count = team.filter((m) => m.role === role).length;
+                return (
+                  <button
+                    key={role}
+                    onClick={() => setSelectedRole(role)}
+                    className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                      selectedRole === role
+                        ? "bg-[#c8a951] text-[#0a2342]"
+                        : "bg-[#c8a951]/10 text-[#0a2342] hover:bg-[#c8a951]/20"
+                    }`}
+                  >
+                    {role} ({count})
+                  </button>
+                );
+              })}
+            </div>
           </div>
+
+          {/* შედეგები */}
+          {filteredTeam.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+              {filteredTeam.map((member, i) => (
+                <TeamCard key={i} {...member} />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-[#0a2342]/60 text-lg">
+                ვერ მოიძებნა შესაბამისი წევრი "{searchQuery}" რომელიც აერთიანებს {selectedRole || "ყველა სტატუსს"}
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </div>

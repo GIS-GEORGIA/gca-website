@@ -52,6 +52,14 @@ export default function MembershipPage() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSfWgJ29G-9IkNjf48yj-GwpJ2ypj7vNhWF6mC8uSrtB20xHag/viewform"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-[#c8a951] text-[#0a2342] px-8 py-4 rounded-lg font-semibold hover:bg-[#c8a951]/90 transition-colors w-full sm:w-auto justify-center"
+            >
+              გაწევრიანების ფორმა
+            </a>
+            <a
               href="mailto:geocartographersassoc@gmail.com"
               className="inline-flex items-center gap-3 bg-[#0a2342] text-white px-8 py-4 rounded-lg font-semibold hover:bg-[#0a2342]/80 transition-colors w-full sm:w-auto justify-center"
             >
