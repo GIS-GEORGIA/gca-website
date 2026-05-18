@@ -11,9 +11,22 @@ type SocialPost = {
   postUrl: string;
   publishedAt: string;
   thumbnailUrl: string | null;
+  pinned?: boolean;
 };
 
 const posts: SocialPost[] = socialPostsData as SocialPost[];
+const sortedPosts = [...posts]
+  .sort((a, b) => {
+    const pinnedA = a.pinned ? 1 : 0;
+    const pinnedB = b.pinned ? 1 : 0;
+
+    if (pinnedA !== pinnedB) {
+      return pinnedB - pinnedA;
+    }
+
+    return b.publishedAt.localeCompare(a.publishedAt);
+  })
+  .slice(0, 9);
 
 export default async function NewsPage({
   params,
@@ -58,7 +71,7 @@ export default async function NewsPage({
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post) => (
+              {sortedPosts.map((post) => (
                 <SocialPostCard
                   key={post.id}
                   post={{ ...post, _id: post.id, thumbnailUrl: post.thumbnailUrl ?? undefined }}
