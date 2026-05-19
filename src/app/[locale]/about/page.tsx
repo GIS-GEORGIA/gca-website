@@ -23,7 +23,7 @@ const team: { name: string; role: RoleKey; photo?: string }[] = [
   { name: "გიორგი დვალაშვილი", role: "scientific" },
   { name: "ნოდარ ელიზბარაშვილი", role: "scientific" },
   { name: "თეონა თიგიშვილი", role: "scientific" },
-  { name: "გიორგი კაპანაძე", role: "scientific" },
+  { name: "გიორგი კაპანაძე", role: "scientific", photo: "/team/Giorgi_Kapanadze.jpg" },
   { name: "ნატო მაისურაძე", role: "scientific" },
   { name: "რობერტ მაღლაკელიძე", role: "scientific" },
   { name: "დემეტრე მოდებაძე", role: "scientific" },
